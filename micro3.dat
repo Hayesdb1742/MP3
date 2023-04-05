@@ -55,7 +55,7 @@
        nst=0
 
 *** Index addressing *** **DONE***
- st=60 rt='[mdr] -> t1'	omdr it1
+ st=60 rt='[mdr] -> t1'  	omdr it1
  st=61 rt='[DST] + [t1] -> q'	rac=3 ib oa oadder newv newc
  st=62 rt='[q] -> mar'		oq imar newz newn
  st=63 rt='[[mar]] -> mdr'	read
@@ -69,7 +69,7 @@
  st=71 rt='[[mar]] -> mdr'	read
  st=72 rt='[mdr] + 1 -> q'	omdr ib p1 oadder newv newc
  st=73 rt='[q] -> mdr'		oq imdr newz newn
- st=76 rt='[mdr]->[[mar]]'	write
+ st=74 rt='[mdr]->[[mar]]'	write
         nst=0
  
 *** Check Addressing Mode ***
@@ -78,15 +78,15 @@
        cond='ir64' value=1 nst=30
        cond='ir64' value=2 nst=50
        cond='ir64' value=3 nst=30
-       cond='ir64' value=4 nst=60
-       cond='ir64' value=5 nst=60
+       cond='ir64' value=4 nst=120
+       cond='ir64' value=5 nst=120
        nst=10
 
 *** Second Fetch for Index & Absolute ***
  st=120 rt='[pc]->mar'        rac=1 rn=3 imar
- st=121 rt='[[mar]]]->mdr'    read
+ st=121 rt='[[mar]]->mdr'     read
  st=122 rt='[pc]+1->q'        rac=1 rn=3 ib p1 oadder
- st=123 rt='[q]+1->pc'        wac=1 wn=3 oq
+ st=123 rt='[q]->pc'          wac=1 wn=3 oq
         cond='ir64' value=4 nst=60
         cond='ir64' value=5 nst=70
 
