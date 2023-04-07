@@ -31,17 +31,18 @@
 *** INC Register Addressing ***
  st=21 rt='[r] + 1 -> q'	rac=3 ib p1 oadder newv newc
  st=22 rt='[q] -> r' 		oq wac=3 newz newn
- 	nst=0
+ 	 nst=0
        
 *** DEC Register Addressing ***
  st=23 rt='[r]->[t1]' 	rac=3 it1
- st=24 rt='[t1]-1-> q'	oa comp oadder
+ st=24 rt='[t1]-1-> q'	oa comp oadder newv newc
  st=25 rt='[q] -> r' 	oq wac=3 newz newn
+       nst=0
 
 *** NEG Register Addressing ***
- st=26 rt='0-[r]->q' 	rac=3 ib p1 oadder comp 
- st=27 rt='[q]->r' 	oq wac=3
- 	nst=0
+ st=26 rt='0-[r]->q' 	rac=3 ib p1 oadder comp newv newc
+ st=27 rt='[q]->r' 	oq wac=3 newz newn
+ 	 nst=0
 
 ******************************************************************************
 
@@ -54,25 +55,24 @@
        cond='ir118' value=3 nst=35
        cond='ir118' value=4 nst=36
 
- st=37 rt='[q]->mdr' 	oq imdr newz newn
- st=38 rt='[mdr]->[[mar]]'	write
-       nst=0
-
 *** INC Indirect Register Addressing ***
- st=34 rt='[t1]+1->[q]'		ot1 ib p1 oadder newv newc
-       nst=36
+ st=34 rt='[t1]+1->[q]'		oa p1 oadder newv newc
+       nst=37
 
 *** DEC Indirect Register Addressing ***
  st=35 rt='[t1]-1->[q]'		oa comp oadder newv newc
-       nst=36
+       nst=37
 
 *** NEG Indirect Register Addressing ***
- st=36 rt='0-[r]->q'		rac=3 ib p1 oadder comp newv newc
-       nst=36
+ st=36 rt='0 - [t1]->q'		ot1 ib p1 oadder comp newv newc
+       nst=37
+
+ st=37 rt='[q]->mdr' 	oq imdr newz newn
+       nst=1000
 
 ******************************************************************************
 
-*** Auto Increment *** **DONE***
+*** Auto Increment Addressing Mode ***
  st=40 rt='[r]-> mar' 	rac=3 imar
  st=41 rt='[r] + 1-> q'	rac=3 ib p1 oadder
  st=42 rt='[q]-> r' 		oq wac=3 
@@ -80,23 +80,25 @@
  st=44
        cond='ir118' value=2 nst=45
        cond='ir118' value=3 nst=46
-       cond='ir118' value=4 nst=47
+       cond='ir118' value=4 nst=48
 
- st=48 rt='[q]-> mdr'         oq imdr newz newn
- st=49 rt='[mdr]->[[mar]]'	write
-       nst=0
-
-*** INC Indirect Register Addressing ***
+*** INC Auto Increment Addressing ***
  st=45 rt='mdr + 1-> q'       omdr ib p1 oadder newv newc
-       nst=36
+       nst=49
 
-*** DEC Indirect Register Addressing ***
- st=46 rt='mdr - 1-> q'		omdr comp oadder newv newc
-       nst=36
+*** DEC AutoIncrement Addressing ***
+ st=46 rt='[mdr]->t1'         omdr it1 
+ st=47 rt='[t1]-1->q'         oa comp oadder newv newc
+       nst=49
 
-*** NEG Indirect Register Addressing ***
- st=47 rt='0 - mdr-> q'		rac=3 ib p1 oadder comp newv newc
-       nst=36
+*** NEG Auto Increment Addressing ***
+ st=48 rt='0 - mdr-> q'		omdr ib p1 oadder comp newv newc
+       nst=49
+
+ st=49 rt='[q]-> mdr'         oq imdr newz newn
+       nst=1000
+
+
 
 ******************************************************************************
 
@@ -107,37 +109,96 @@
  st=52 rt='[q]->r' 		oq wac=3 
  st=53 rt='[q]-> mar'         rac=3 imar
  st=54 rt='[[mar]]-> mdr'     read
- st=55 rt='mdr + 1-> q'       omdr ib p1 oadder newv newc
- st=56 rt='[q]-> mdr'         oq imdr newz newn
- st=57 rt='[mdr]->[[mar]]'	write
-       nst=0
+ st=55
+      cond='ir118' value=2 nst=56
+      cond='ir118' value=3 nst=57
+      cond='ir118' value=4 nst=59
+
+*** INC Auto Decrement Addressing ***
+ st=56 rt='mdr + 1-> q'       omdr ib p1 oadder newv newc
+       nst=60
+
+*** DEC Auto Decrement Addressing ***
+ st=57 rt='[mdr]->t1'         omdr it1 
+ st=58 rt='[t1]-1->q'         oa comp oadder newv newc
+       nst=60
+
+*** NEG Auto Decrement Addressing ***
+ st=59 rt='0 - mdr-> q'		omdr ib p1 oadder comp newv newc
+       nst=60
+
+
+       
+
+ st=60 rt='[q]-> mdr'         oq imdr newz newn
+       nst=1000
+
+
+
+******************************************************************************
 
 *** Index addressing *** **DONE***
- st=60 rt='[mdr] -> t1'	      omdr it1
- st=61 rt='[DST] + [t1] -> q'	rac=3 ib oa oadder newv newc
- st=62 rt='[q] -> mar'		oq imar newz newn
- st=63 rt='[[mar]] -> mdr'	read
- st=64 rt='[mdr] + 1 -> q'	omdr ib p1 oadder newv newc
- st=65 rt='[q] -> mdr'		oq imdr newz newn
- st=66 rt='[mdr]->[[mar]]'	write
-       nst=0
+ st=70 rt='[mdr] -> t1'	      omdr it1
+ st=71 rt='[DST] + [t1] -> q'	rac=3 ib oa oadder newv newc
+ st=72 rt='[q] -> mar'		oq imar newz newn
+ st=73 rt='[[mar]] -> mdr'	read
+      cond='ir118' value=2 nst=74
+      cond='ir118' value=3 nst=75
+      cond='ir118' value=4 nst=77
+
+*** INC for Index Addressing***
+ st=74 rt='[mdr]+1->q'        omdr ib oadder p1 newv newc
+      nst=78
+
+*** DEC for Index Addressing***
+ st=75 rt='[mdr]->t1'         omdr it1 
+ st=76 rt='[t1]-1->q'         oa comp oadder newv newc
+       nst=78
+
+*** NEG for Index Addressing***
+ st=77 rt='0 - [mdr]-> q'		omdr ib p1 oadder comp newv newc
+       nst=78
+
+ st=78 rt='[q] -> mdr'		oq imdr newz newn
+       nst=1000
+
+******************************************************************************
+
 
 *** Absolute *** **DONE***
- st=70 rt='[mdr] -> mar'	omdr imar
- st=71 rt='[[mar]] -> mdr'	read
- st=72 rt='[mdr] + 1 -> q'	omdr ib p1 oadder newv newc
- st=73 rt='[q] -> mdr'		oq imdr newz newn
- st=76 rt='[mdr]->[[mar]]'	write
-        nst=0
+ st=80 rt='[mdr] -> mar'	omdr imar
+ st=81 rt='[[mar]] -> mdr'	read
+      cond='ir118' value=2 nst=82
+      cond='ir118' value=3 nst=83
+      cond='ir118' value=4 nst=85
+
+*** INC for Index Addressing***
+ st=82 rt='[mdr]+1->q'         omdr ib oadder p1 newv newc
+      nst=86
+
+*** DEC for Index Addressing***
+ st=83 rt='[mdr]->t1'         omdr it1 
+ st=84 rt='[t1]-1->q'         oa comp oadder newv newc
+       nst=86
+
+*** NEG for Index Addressing***
+ st=85 rt='0 - [mdr]-> q'	omdr ib p1 oadder comp newv newc
+       nst=86
+ 
+ st=86 rt='[q] -> mdr'		oq imdr newz newn
+       nst=1000
+
+******************************************************************************
+
  
 *** Check Addressing Mode ***
- st=100 rt='[pc]->pc'		rac=1 rn=3 
+ st=100
        cond='ir64' value=0 nst=20
        cond='ir64' value=1 nst=30
-       cond='ir64' value=2 nst=50
-       cond='ir64' value=3 nst=30
-       cond='ir64' value=4 nst=60
-       cond='ir64' value=5 nst=60
+       cond='ir64' value=2 nst=40
+       cond='ir64' value=3 nst=50
+       cond='ir64' value=4 nst=120
+       cond='ir64' value=5 nst=120
        nst=10
 
 *** Second Fetch for Index & Absolute ***
@@ -145,8 +206,11 @@
  st=121 rt='[[mar]]->mdr'     read
  st=122 rt='[pc]+1->q'        rac=1 rn=3 ib p1 oadder
  st=123 rt='[q]->pc'          wac=1 wn=3 oq
-        cond='ir64' value=4 nst=60
-        cond='ir64' value=5 nst=70
+        cond='ir64' value=4 nst=70
+        cond='ir64' value=5 nst=80
 
+*** Write Function *** 
+ st=1000 rt='[mdr]->[[mar]]'   write
+        nst=0
 
 
