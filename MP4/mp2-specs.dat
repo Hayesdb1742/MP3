@@ -1,0 +1,69 @@
+****************************
+**** 	   ECE 5362    ****
+**** Machine Problem 1 ****
+****   Hayes Bentley   ****
+***************************
+*** Start Fetch Cycle  ***
+ st=0	rt='[pc]-> mar'		imar rac=1 rn=3
+ st=1	rt='[[mar]]-> mdr'	read
+ st=2	rt='[mdr] -> ir' 	omdr iir
+ st=3 	rt='[pc]+1 -> q' 	rac=1 rn=3 ib p1 oadder
+ st=4 	rt='[q] -> pc'		oq wac=1 wn=3
+	cond='ir158' value=2 nst=100
+	nst=10
+
+
+*** If any instructions are present except except HALT or INC, a halt will occur. ***
+ st=10 halt
+
+*** INC evaluator cycle ***
+ st=20 rt='[r] + 1 -> q'	rac=3 ib p1 oadder newv newc
+ st=21 rt='[q] -> r' 		oq wac=3 newz newn
+ 	nst=0
+
+
+*** INC Register indirect ***
+ st=30 rt='[r]->mar'       	rac=3 imar
+ st=31 rt='[[mar]]->mdr'	read
+ st=32 rt='[mdr]->t1' 		omdr it1
+       cond='ir64' value=4 nst=60
+ st=33 rt='[t1]+1->[q]'		ot1 ib p1 oadder newv newc
+ st=34 rt='[q]->mdr' 		oq imdr newz newn
+ st=35 rt='[mdr]->[mar]'	write
+       cond='ir64' value=2 nst=20
+       cond='ir64' value=3 nst=50
+       nst=0
+
+
+*** Decrement ***
+ st=50 rt='[r]->t1' 		rac=3 it1
+ st=51 rt='[t1]-1->q'		oa comp oadder newv newc
+ st=52 rt='[q]->r' 		oq wac=3 newz newn
+ nst=0
+
+
+
+*** index addressing ***
+ st=60 rt='[pc]->mar' 		imar rac=1 rn=3
+ st=61 rt='[[mar]]->mdr' 	read
+ st=62 rt='[pc]+1-> q'		rac=1 rn=3 ib p1 oadder newv newc
+ st=63 rt='[q]->pc' 		oq wac=1 wn=3 newz newn
+       cond='ir64' value=5 nst=70
+ st=64 rt='[t1]+[mdr]->q' 	oa omdr ib iq newv newc
+ st=65 rt='[q]->t1' 		it1 oq newz newn
+ nst=33
+
+*** absolute ***
+ st=70 rt='[mdr]->t1' omdr it1
+ nst=33
+ 
+*** Check Addressing Mode ***
+ st=100 rt='[pc]->pc'		rac=1 rn=3 
+       cond='ir64' value=0 nst=20
+       cond='ir64' value=1 nst=30
+       cond='ir64' value=2 nst=30
+       cond='ir64' value=3 nst=30
+       cond='ir64' value=4 nst=60
+       cond='ir64' value=5 nst=60
+       nst=10
+
