@@ -1,0 +1,293 @@
+****************************
+**** 	   ECE 5362    ****
+**** Machine Problem 4 ****
+****   Hayes Bentley   ****
+****   Aaron Savel     ****
+***************************
+*** Start Fetch Cycle  ***
+ st=0	rt='[pc]-> mar'		imar rac=1 rn=3
+ st=1	rt='[[mar]]-> mdr'	read
+ st=2	rt='[mdr] -> ir' 	      omdr iir
+ st=3 rt='[pc]+1 -> q' 	rac=1 rn=3 ib p1 oadder
+ st=4 rt='[q] -> pc'	oq wac=1 wn=3
+       cond='ir1512' value=1 nst=200
+       cond='ir1512' value=2 nst=200
+       cond='ir1512' value=3 nst=200
+       cond='ir1512' value=4 nst=200
+       cond='ir1512' value=5 nst=200
+       cond='ir1512' value=6 nst=200
+       cond='ir158' value=1 nst=185
+       cond='ir158' value=2 nst=185
+       cond='ir158' value=3 nst=185
+	 cond='ir158' value=4 nst=185
+       cond='ir158' value=5 nst=185
+       cond='ir158' value=6 nst=185
+       cond='ir76' value=2 nst=800 
+	 nst=10
+
+
+*** If any instructions are present except except HALT or INC, a halt will occur. ***
+ st=10 halt
+
+**********************SINGLE OPERAND ADDRESSING MODES**************************************
+
+**********REGISTER ADDRESSING************
+ st=20 rt='[r]->t3'    rac=2 it3
+      nst=186
+**********INDIRECT REGISTER ADDRESSING************
+ st=25 rt='[r]->mar'       	rac=2 imar
+ st=26 rt='[[mar]]->mdr'	read
+ st=27 rt='[mdr]->t3' 	      omdr it3
+       cond='ir64' value=1 nst=186
+       cond='ir64' value=2 nst=30
+       cond='ir64' value=3 nst=186
+
+**********AutoIncrement ADDRESSING************
+ st=30 rt='[r]+1->q'    rac=2 ib p1 oadder newv newc
+ st=31 rt='[q]->r '     oq wac=2
+       nst=186
+**********AutoDecrement ADDRESSING************
+ st=33 rt='[r]->t1' 		rac=2 it1
+ st=34 rt='[t1]-1->q'		oa comp oadder 
+ st=35 rt='[q]->r' 		oq wac=2
+       nst=25
+**********Index ADDRESSING************
+ st=40 rt='[mdr] -> t1'	      omdr it1
+ st=41 rt='[Rk]+[t1] -> q'	rac=2 ib oa oadder newv newc
+ st=42 rt='[q]-> mar'		oq imar newz newn
+ st=43 rt='[[mar]]-> mdr'	read
+ st=44 rt='[mdr]->t3'         omdr it3
+       nst=186
+**********Absolute ADDRESSING************
+ st=47 rt='[mdr]->mar'       omdr imar
+ st=48 rt='[[mar]]->mdr'     read
+ st=49 rt='[mdr]->t3'        omdr it3
+       nst=186
+**********Absolute ADDRESSING************
+ st=55 rt='[mdr]->mar'       omdr imar
+ st=56 rt='[[mar]]->mdr'     read
+ st=57 rt='[mdr]->t3'         omdr it3
+        nst=186
+**********Immediate ADDRESSING************
+ st=60 rt='[mdr]->t3'       omdr it3
+        nst=186
+
+**********************SINGLE OPERAND Instructions**************************************
+
+**********CLEAR #1 ************
+ st=65 rt='t3->t1'       ot3 it1
+ st=66 rt='t1 - t3->q'  oa ot3 comp p1 ib oadder newv clrc
+       cond='ir64' value=0 nst=194
+ st=67 rt='[q]-> mdr'    oq imdr newz newn
+       nst=1000
+**********INCREMENT #2 ************
+ st=68 rt='t3->t1'       ot3 it1
+ st=69 rt='t1 + 1->q'    oa p1 oadder newv newc
+       cond='ir64' value=0 nst=194
+ st=70 rt='[q]-> mdr'    oq imdr newz newn
+       nst=1000
+**********DECREMENT #3 ************
+ st=71 rt='t3->t1'       ot3 it1
+ st=72 rt='t1 -1->q'   oa comp oadder newv newc
+       cond='ir64' value=0 nst=194
+ st=73 rt='[q]-> mdr'    oq imdr newz newn
+       nst=1000
+**********NEGATE #4 ************
+ st=74 rt='0 - t3->q'   ot3 ib p1 comp oadder newv newc
+       cond='ir64' value=0 nst=194
+ st=75 rt='[q]-> mdr'    oq imdr newz newn
+       nst=1000
+**********COMPLEMENT #5 ************
+ st=76 rt='0 - t3->q'   ot3 ib comp oadder newv newc
+       cond='ir64' value=0 nst=194
+ st=77 rt='[q]-> mdr'    oq imdr newz newn
+       nst=1000
+**********JUMP #6 ************
+
+**********JUMP TO SUBROUTINE #7 ************
+
+**********TEST #8 ************
+ st=100 rt='t3->t1'  ot3 it1
+ st=101 rt='t1->q'   oa oadder newv newc
+       cond='ir64' value=0 nst=194
+ st=73 rt='[q]-> mdr'    oq imdr newz newn
+       nst=0
+       
+*** Check Addressing Mode Single Operand ***
+ st=185
+       cond='ir64' value=0 nst=20
+       cond='ir64' value=1 nst=25
+       cond='ir64' value=2 nst=25
+       cond='ir64' value=3 nst=33
+       cond='ir64' value=4 nst=190
+       cond='ir64' value=5 nst=190
+       cond='ir64' value=6 nst=190
+       nst=10
+*** Check Instruction Single Operand ***
+ st=186
+      cond='ir118' value=1 nst=65
+      nst=10
+*** Second Fetch for Index & Absolute ***
+ st=190 rt='[pc]->mar'        rac=1 rn=3 imar
+ st=191 rt='[[mar]]->mdr'     read
+ st=192 rt='[pc]+1->q'        rac=1 rn=3 ib p1 oadder
+ st=193 rt='[q]->pc'          wac=1 wn=3 oq
+        cond='ir64' value=4 nst=40
+        cond='ir64' value=5 nst=55
+        cond='ir64' value=6 nst=60
+
+
+ st=194 rt='[q]->[r]'     oq wac=3 newz newn
+        nst = 0
+
+**********************DOUBLE OPERAND ADDRESSING MODES**************************************
+*** Check Addressing Mode Double Operand***
+ st=200
+       cond='ir118' value=0 nst=300
+       cond='ir118' value=1 nst=302
+       cond='ir118' value=2 nst=302
+       cond='ir118' value=3 nst=313
+       cond='ir118' value=4 nst=361
+       cond='ir118' value=5 nst=361
+       cond='ir118' value=6 nst=361
+       nst=10
+
+*** Double Operand Register Addressing ***
+ st=300 rt='[r]->t3'    rac=2 it3
+        nst=400
+ st=301 rt='[r]->t4'    rac=3 it4
+        nst=500
+ 
+*** Double Operand Indirect Register Addressing ***
+ st=302 rt='[r]->mar'       	rac=2 imar
+ st=303 rt='[[mar]]->mdr'	read
+ st=304 rt='[mdr]->t3' 	      omdr it3
+        cond='ir118' value=2 nst=309
+        cond='ir118' value=1 nst=400
+        cond='ir118' value=3 nst=400
+** dst indirect register ***
+ st=305 rt='[r]->t5'       	rac=3 it5
+ st=306 rt='[t5]->mar'        ot5 imar
+ st=307 rt='[[mar]]->mdr'	read
+ st=308 rt='[mdr]->t4' 	      omdr it4
+      cond='ir64' value=2 nst=311
+        nst=500
+
+*** Double Operand AutoIncrement Addressing ***
+ st=309 rt='[r]+1->q'    rac=2 ib p1 oadder newv newc
+ st=310 rt='[q]->r '     oq wac=2
+        nst=400
+ st=311 rt='[r]+1->q'    rac=3 ib p1 oadder newv newc
+ st=312 rt='[q]->r'      oq wac=3
+        nst=500
+
+*** Double Operand AutoDecrement Addressing ***\
+*** src ***
+ st=313 rt='[r]->t1' 		rac=2 it1
+ st=314 rt='[t1]-1->q'		oa comp oadder 
+ st=315 rt='[q]->r' 		oq wac=2
+      nst=302
+*** dest ***
+ st=316 rt='[r]->t1' 		rac=3 it1
+ st=317 rt='[t1]-1->q'		oa comp oadder 
+ st=318 rt='[q]->r' 		oq wac=3
+      nst=305
+
+***Index Mode for double operand ***
+ st=350 rt='[mdr] -> t1'	      omdr it1
+ st=351 rt='[src] + [t1] -> q'	rac=2 ib oa oadder newv newc
+ st=352 rt='[q] -> mar'		oq imar newz newn
+ st=353 rt='[[mar]] -> mdr'	read
+ st=354 rt='[mdr]->t3'        omdr it3
+        nst=301
+*** Destination Index ***
+ st=355 rt='[mdr] -> t1'	      omdr it1
+ st=356 rt='[dst] + [t1] -> q'	rac=3 ib oa oadder newv newc
+ st=357 rt='[q] -> t5'		oq it5 
+ st=358 rt='[q] -> mar'		oq imar newz newn
+ st=359 rt='[[mar]] -> mdr'	read
+ st=360 rt='[mdr]->t4'         omdr it4
+        nst=500
+
+*** Second Fetch for Index & Absolute DOUBLE OPERAND***
+ st=361 rt='[pc]->mar'        rac=1 rn=3 imar
+ st=362 rt='[[mar]]->mdr'     read
+ st=363 rt='[pc]+1->q'        rac=1 rn=3 ib p1 oadder
+ st=364 rt='[q]->pc'          wac=1 wn=3 oq
+        cond='ir118' value=4 nst=350
+        cond='ir118' value=5 nst=371
+        cond='ir118' value=6 nst=370
+        
+*** Immediate for source ***
+ st=370 rt='[mdr]->t3'        omdr it3
+      nst=400
+
+*** Absolute for source ***
+ st=371 rt='[mdr]->mar'       omdr imar
+ st=372 rt='[[mar]]->mdr'     read
+ st=373 rt='[mdr]->t3'         omdr it3
+        nst=400
+ st=374 rt='[mdr]->t5'        omdr it5
+ st=375 rt='[mdr]->mar'       omdr imar
+ st=376 rt='[[mar]]->mdr'     read
+ st=377 rt='[mdr]->t4'        omdr it4
+        nst=500
+
+*** Second Fetch for Index & Absolute DOUBLE OPERAND***
+ st=381 rt='[pc]->mar'        rac=1 rn=3 imar
+ st=382 rt='[[mar]]->mdr'     read
+ st=383 rt='[pc]+1->q'        rac=1 rn=3 ib p1 oadder
+ st=384 rt='[q]->pc'          wac=1 wn=3 oq
+        cond='ir64' value=4 nst=355
+        cond='ir64' value=5 nst=374
+ st=400
+      cond='ir64' value=0 nst=301
+      cond='ir64' value=1 nst=305
+      cond='ir64' value=2 nst=305
+      cond='ir64' value=3 nst=316
+      cond='ir64' value=4 nst=381
+      cond='ir64' value=5 nst=381
+ st=500 
+      cond='ir1512' value=1 nst=501
+      cond='ir1512' value=2 nst=520
+      cond='ir1512' value=3 nst=530
+
+*** ADD OPCODE ***
+ st=501 rt='[t3]->t1'   ot3 it1
+ st=502 rt='[t1]+[t4]->q'     ib ot4 oa oadder newv newc
+      cond='ir64' value=0 nst=510
+ st=503 rt='[q]->mdr'         oq imdr newz newn
+ st=504 rt='[t5]->mar'        ot5 imar
+        nst=1000
+ 
+ st=510 rt='[q]->[r]' oq wac=3      newz newn
+      nst=0
+
+*** SUB OPCODE ***
+ st=520 rt='[t4]->t1'         ot4 it1
+ st=521 rt='[t1]-[t3]->q'     ib ot3 oa p1 comp oadder newv newc
+      cond='ir64' value=0 nst=524
+ st=522 rt='[q]->mdr'         oq imdr newz newn
+ st=523 rt='[t5]->mar'        ot5 imar
+        nst=1000
+ st=524 rt='[q]->[r]' oq wac=3 newz newn
+      nst=0
+
+*** MOVE ***
+ st=530 
+       cond='ir64' value=0 nst=531
+       nst=532
+ st=531 rt='[t3]->dst'  ot3 wac=3
+       nst=0
+ st=532 rt='[t5]->mar'   imar ot5
+ st=533 rt='[t3]->mdr'   imdr ot3 clrc clrv newn newz 
+       nst=1000
+
+ st=800 
+      cond='ir0' value=1 nst=811    
+      nst=0
+
+*** Write Function *** 
+ st=1000 rt='[mdr]->[[mar]]'   write
+       nst=0
+
